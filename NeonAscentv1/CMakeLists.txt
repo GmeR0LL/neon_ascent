@@ -17,7 +17,7 @@ find_package(SFML 2 COMPONENTS graphics window system REQUIRED)
 add_executable(NeonAscent
     main.cpp
     Gracz.h
-    platforma.h
+    Platforma.h
     Gra.h
     Obiekt.h
     Gra.cpp

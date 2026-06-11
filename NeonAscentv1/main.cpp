@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Gra.h"
-#include "platforma.h"
+#include "Platforma.h"
 
 using namespace std;
 
