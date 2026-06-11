@@ -4,13 +4,22 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
-#include <random>
+#include "Obiekt.h" // Wrzucamy nasz polski Obiekt
 
-class Gra{
+class Gra {
+private:
+    sf::RenderWindow okno;
+
+    // Główny kontener na wskaźniki inteligentne
+    std::vector<std::unique_ptr<Obiekt>> obiektyWGrze;
+
+    void obsluzZdarzenia();
+    void aktualizuj(float deltaTime);
+    void rysuj();
+
 public:
     Gra();
-    void run();
-
+    void uruchom();
 };
 
 #endif // GRA_H
