@@ -12,7 +12,7 @@ public:
     Obiekt(float x, float y) : pozycja(x, y), predkosc(0.f, 0.f) {}
     virtual ~Obiekt() = default;
 
-    //Metody czysto wirtualne pod przyszly polimorfizm
+    //funkcje void polimorfizm
     virtual void aktualizuj(float deltaTime) = 0;
     virtual void rysuj(sf::RenderWindow& okno) = 0;
     virtual sf::FloatRect pobierzGranice() const = 0;

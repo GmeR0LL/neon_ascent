@@ -4,28 +4,31 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <memory>
-#include <random> // Wymóg: nowożytne losowanie w C++
+#include <random>
 #include "Obiekt.h"
 
 class Gra {
 private:
     sf::RenderWindow okno;
-    sf::View kamera; // Wirtualna kamera śledząca gracza
+    sf::View kamera;
 
     std::vector<std::unique_ptr<Obiekt>> obiektyWGrze;
 
-    // Zmienne do generowania mapy w locie
+    //zmienne do mapy
     float najwyzszaPlatformaY;
     std::mt19937 generatorRNG;
     std::uniform_real_distribution<float> rozkladX;
+
+    int obecnyWynik;
 
     void obsluzZdarzenia();
     void aktualizuj(float deltaTime);
     void rysuj();
 
-    // Nowe funkcje
+    //potrzebne funkcje
     void generujPlatformy();
     void usunStarePlatformy();
+    void zapiszWynik();
 
 public:
     Gra();

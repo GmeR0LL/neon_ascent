@@ -1,24 +1,25 @@
 #include "Gra.h"
 #include "Gracz.h"
 #include "Platforma.h"
-#include <algorithm> // Dla std::remove_if
+#include <algorithm>
 
 Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent - v4") {
     okno.setFramerateLimit(60);
 
-    // Konfiguracja kamery (rozmiar i środek)
+    // Konfiguracja kamery
     kamera.setSize(800.f, 600.f);
     kamera.setCenter(400.f, 300.f);
 
-    // Inicjalizacja generatora (pozycje X od 50 do 600)
+    //generator
     std::random_device rd;
     generatorRNG.seed(rd());
     rozkladX = std::uniform_real_distribution<float>(50.f, 600.f);
+    obecnyWynik = 0;
 
-    // Gracz
+    //gracz
     obiektyWGrze.push_back(std::make_unique<Gracz>(400.f, 200.f));
 
-    // Startowa, długa podłoga
+    // Start podloga
     najwyzszaPlatformaY = 400.f;
     obiektyWGrze.push_back(std::make_unique<Platforma>(0.f, 550.f, 800.f));
 
@@ -58,13 +59,27 @@ void Gra::aktualizuj(float deltaTime) {
     }
 
     if (gracz) {
-        // --- 1. RUCH KAMERY ---
-        // Jeśli gracz jest wyżej (ma mniejszy Y) niż środek kamery, przesuwamy kamerę za nim.
+        //ruch kamery
         if (gracz->pobierzPozycje().y < kamera.getCenter().y) {
             kamera.setCenter(400.f, gracz->pobierzPozycje().y);
         }
 
-        // --- 2. KOLIZJE ---
+
+        //obliczanie wyniku
+        int wynikZWysokosci = 400 - static_cast<int>(gracz->pobierzPozycje().y);
+        if (wynikZWysokosci > obecnyWynik) {
+            obecnyWynik = wynikZWysokosci;
+        }
+
+        //gameover i zapis wyniku
+
+        if (gracz->pobierzPozycje().y > kamera.getCenter().y + 300.f) {
+            zapiszWynik();
+            okno.close();
+
+        }
+
+        //kolizja
         if (gracz->pobierzPredkoscY() > 0) {
             sf::FloatRect graniceGracza = gracz->pobierzGranice();
             for (auto& obiekt : obiektyWGrze) {
@@ -79,7 +94,7 @@ void Gra::aktualizuj(float deltaTime) {
         }
     }
 
-    // --- 3. DYNAMICZNA MAPA ---
+    //dynamik map
     generujPlatformy();
     usunStarePlatformy();
 }
@@ -87,7 +102,6 @@ void Gra::aktualizuj(float deltaTime) {
 void Gra::rysuj() {
     okno.clear(sf::Color(15, 15, 30));
 
-    // Kluczowe: Mówimy oknu, żeby patrzyło przez naszą przesuwaną kamerę!
     okno.setView(kamera);
 
     for (auto& obiekt : obiektyWGrze) {
@@ -97,29 +111,37 @@ void Gra::rysuj() {
     okno.display();
 }
 
-// Tworzy platformy wyżej, jeśli zbliżamy się do górnej krawędzi kamery
+//tworzenie dynamicznej platformy
 void Gra::generujPlatformy() {
-    // Generuj dopóki najwyższa platforma nie jest sporo powyżej obecnego widoku
+ //jezeli wysoko to generuje platforme
     while (najwyzszaPlatformaY > kamera.getCenter().y - 600.f) {
         najwyzszaPlatformaY -= 90.f; // Skok w górę między platformami
         float losowyX = rozkladX(generatorRNG);
 
-        // Zwykłe, mniejsze platformy (szerokość 120)
+        // platformy
         obiektyWGrze.push_back(std::make_unique<Platforma>(losowyX, najwyzszaPlatformaY, 120.f));
     }
 }
 
-// Usuwa platformy, które zniknęły daleko w dole pod kamerą (Optymalizacja pamięci)
+//optymalizacja pamieci
 void Gra::usunStarePlatformy() {
     float dolEkranu = kamera.getCenter().y + 400.f;
-
-    // Idiom Erase-Remove (bardzo dobrze punktowane przez wykładowców)
     obiektyWGrze.erase(std::remove_if(obiektyWGrze.begin(), obiektyWGrze.end(),
                                       [dolEkranu](const std::unique_ptr<Obiekt>& obj) {
-                                          // Sprawdzamy czy to platforma i czy wypadła poza dół
+                                          //platforma, jezeli jest ponizej ekranu to
                                           if (dynamic_cast<Platforma*>(obj.get())) {
                                               return obj->pobierzPozycje().y > dolEkranu;
                                           }
                                           return false;
                                       }), obiektyWGrze.end());
+}
+
+
+
+void Gra::zapiszWynik() {
+    std::ofstream plik("wyniki.txt", std::ios::app);
+    if (plik.is_open()) {
+        plik << "Wynik gracza (na bazie wysokosci): " << obecnyWynik << "\n";
+        plik.close();
+    }
 }

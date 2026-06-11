@@ -6,15 +6,15 @@ Gracz::Gracz(float x, float y) : Obiekt(x, y) {
     ksztalt.setPosition(pozycja);
 
     szybkoscRuchu = 400.f;
-    grawitacja = 1200.f;  // Ciągnie w dół (oś Y rośnie w dół w SFML)
-    silaSkoku = -750.f;   // Wybija do góry
+    grawitacja = 1200.f; //w dol
+    silaSkoku = -750.f;   // do góry
 }
 
 void Gracz::aktualizuj(float deltaTime) {
-    // 1. Grawitacja - wektor przyspieszenia
+    // wektor przyspieszenia
     predkosc.y += grawitacja * deltaTime;
 
-    // 2. Sterowanie
+    //Sterowanie
     predkosc.x = 0.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
         predkosc.x = -szybkoscRuchu;
@@ -23,10 +23,10 @@ void Gracz::aktualizuj(float deltaTime) {
         predkosc.x = szybkoscRuchu;
     }
 
-    // 3. Aktualizacja pozycji o wektor prędkości
+    //Aktualizacja pozycji o wektor prędkości
     pozycja += predkosc * deltaTime;
 
-    // 4. Zawijanie ekranu
+    // Zawijanie ekranu
     if (pozycja.x < 0) pozycja.x = 800.f;
     if (pozycja.x > 800) pozycja.x = 0.f;
 
