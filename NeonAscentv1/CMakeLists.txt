@@ -16,6 +16,7 @@ find_package(SFML 2 COMPONENTS graphics window system REQUIRED)
 #pliki wykonawcze
 add_executable(NeonAscent
     main.cpp
+    gracz.h
 
 )
 
