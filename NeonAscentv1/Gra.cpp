@@ -2,13 +2,17 @@
 #include "Gracz.h"
 #include "Platforma.h"
 #include <algorithm>
+#include <fstream>
+#include <iostream>
 
-Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent - v4") {
+Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent") {
     okno.setFramerateLimit(60);
+    obecnyStan = StanGry::MENU;
 
-    // Konfiguracja kamery
-    kamera.setSize(800.f, 600.f);
-    kamera.setCenter(400.f, 300.f);
+    //zaladowanie czcionki
+    if (!czcionka.loadFromFile("media/czcionka.ttf")) {
+        std::cout << "Blad ladowania czcionki! Upewnij sie, ze plik jest w folderze media/czcionka.ttf\n";
+    }
 
     //generator
     std::random_device rd;
@@ -16,20 +20,100 @@ Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent - v4") {
     rozkladX = std::uniform_real_distribution<float>(50.f, 600.f);
     obecnyWynik = 0;
 
-    //gracz
-    obiektyWGrze.push_back(std::make_unique<Gracz>(400.f, 200.f));
+    //szykowanie ui
+    inicjalizujMenu();
+    inicjalizujGameOver();
+    inicjalizujEkranWynikow();
 
-    // Start podloga
-    najwyzszaPlatformaY = 400.f;
-    obiektyWGrze.push_back(std::make_unique<Platforma>(0.f, 550.f, 800.f));
+    zresetujGre();
+}
 
+void Gra::inicjalizujMenu() {
+    tekstTytulu.setFont(czcionka);
+    tekstTytulu.setString("NEON ASCENT");
+    tekstTytulu.setCharacterSize(50);
+    tekstTytulu.setFillColor(sf::Color::Cyan);
+    tekstTytulu.setPosition(240.f, 80.f);
 
-    //pierwsza platforma 100% mozliwa do skoku
-    obiektyWGrze.push_back(std::make_unique<Platforma>(350.f, 400.f, 100.f));
-    najwyzszaPlatformaY = 400.f;
+    przyciskGraj.setSize(sf::Vector2f(200.f, 50.f));
+    przyciskGraj.setFillColor(sf::Color(40, 40, 80));
+    przyciskGraj.setPosition(300.f, 220.f);
+    tekstGraj.setFont(czcionka);
+    tekstGraj.setString("GRAJ");
+    tekstGraj.setCharacterSize(24);
+    tekstGraj.setFillColor(sf::Color::White);
+    tekstGraj.setPosition(370.f, 230.f);
 
-    // Wygenerowanie pierwszych platform na start
-    generujPlatformy();
+    przyciskWynik.setSize(sf::Vector2f(200.f, 50.f));
+    przyciskWynik.setFillColor(sf::Color(40, 40, 80));
+    przyciskWynik.setPosition(300.f, 300.f);
+    tekstWynik.setFont(czcionka);
+    tekstWynik.setString("WYNIKI");
+    tekstWynik.setCharacterSize(24);
+    tekstWynik.setFillColor(sf::Color::White);
+    tekstWynik.setPosition(360.f, 310.f);
+
+    przyciskWyjdz.setSize(sf::Vector2f(200.f, 50.f));
+    przyciskWyjdz.setFillColor(sf::Color(80, 40, 40));
+    przyciskWyjdz.setPosition(300.f, 380.f);
+    tekstWyjdz.setFont(czcionka);
+    tekstWyjdz.setString("WYJDZ");
+    tekstWyjdz.setCharacterSize(24);
+    tekstWyjdz.setFillColor(sf::Color::White);
+    tekstWyjdz.setPosition(365.f, 390.f);
+}
+
+void Gra::inicjalizujGameOver() {
+    tekstGameOver.setFont(czcionka);
+    tekstGameOver.setString("GAME OVER");
+    tekstGameOver.setCharacterSize(60);
+    tekstGameOver.setFillColor(sf::Color::Red);
+    tekstGameOver.setPosition(240.f, 100.f);
+
+    tekstWynikuKoncowego.setFont(czcionka);
+    tekstWynikuKoncowego.setCharacterSize(30);
+    tekstWynikuKoncowego.setFillColor(sf::Color::White);
+    tekstWynikuKoncowego.setPosition(260.f, 200.f);
+
+    przyciskRestart.setSize(sf::Vector2f(200.f, 50.f));
+    przyciskRestart.setFillColor(sf::Color(40, 80, 40));
+    przyciskRestart.setPosition(180.f, 350.f);
+    tekstRestart.setFont(czcionka);
+    tekstRestart.setString("RESTART");
+    tekstRestart.setCharacterSize(24);
+    tekstRestart.setFillColor(sf::Color::White);
+    tekstRestart.setPosition(230.f, 360.f);
+
+    przyciskQuit.setSize(sf::Vector2f(200.f, 50.f));
+    przyciskQuit.setFillColor(sf::Color(80, 40, 40));
+    przyciskQuit.setPosition(420.f, 350.f);
+    tekstQuit.setFont(czcionka);
+    tekstQuit.setString("QUIT");
+    tekstQuit.setCharacterSize(24);
+    tekstQuit.setFillColor(sf::Color::White);
+    tekstQuit.setPosition(490.f, 360.f);
+}
+
+void Gra::inicjalizujEkranWynikow() {
+    tekstNaglowekWynikow.setFont(czcionka);
+    tekstNaglowekWynikow.setString("OSTATNIE WYNIKI");
+    tekstNaglowekWynikow.setCharacterSize(40);
+    tekstNaglowekWynikow.setFillColor(sf::Color::Cyan);
+    tekstNaglowekWynikow.setPosition(220.f, 50.f);
+
+    tekstListaWynikow.setFont(czcionka);
+    tekstListaWynikow.setCharacterSize(24);
+    tekstListaWynikow.setFillColor(sf::Color::White);
+    tekstListaWynikow.setPosition(220.f, 150.f);
+
+    przyciskPowrot.setSize(sf::Vector2f(200.f, 50.f));
+    przyciskPowrot.setFillColor(sf::Color(80, 40, 40));
+    przyciskPowrot.setPosition(300.f, 500.f);
+    tekstPowrot.setFont(czcionka);
+    tekstPowrot.setString("POWROT");
+    tekstPowrot.setCharacterSize(24);
+    tekstPowrot.setFillColor(sf::Color::White);
+    tekstPowrot.setPosition(350.f, 510.f);
 }
 
 void Gra::uruchom() {
@@ -42,95 +126,173 @@ void Gra::uruchom() {
     }
 }
 
+void Gra::zresetujGre() {
+    obiektyWGrze.clear();
+    obecnyWynik = 0;
+
+    kamera.setSize(800.f, 600.f);
+    kamera.setCenter(400.f, 300.f);
+
+    obiektyWGrze.push_back(std::make_unique<Gracz>(400.f, 200.f));
+    obiektyWGrze.push_back(std::make_unique<Platforma>(0.f, 550.f, 800.f));
+    obiektyWGrze.push_back(std::make_unique<Platforma>(350.f, 400.f, 100.f));
+    najwyzszaPlatformaY = 400.f;
+
+    generujPlatformy();
+}
+
 void Gra::obsluzZdarzenia() {
     sf::Event zdarzenie;
     while (okno.pollEvent(zdarzenie)) {
         if (zdarzenie.type == sf::Event::Closed)
             okno.close();
+
+        if (zdarzenie.type == sf::Event::MouseButtonPressed && zdarzenie.mouseButton.button == sf::Mouse::Left) {
+            sf::Vector2i pozycjaMyszkiI = sf::Mouse::getPosition(okno);
+            sf::Vector2f pozycjaMyszki = okno.mapPixelToCoords(pozycjaMyszkiI);
+
+            if (obecnyStan == StanGry::MENU) {
+                if (przyciskGraj.getGlobalBounds().contains(pozycjaMyszki)) {
+                    zresetujGre();
+                    obecnyStan = StanGry::ROZGRYWKA;
+                }
+                else if (przyciskWynik.getGlobalBounds().contains(pozycjaMyszki)) {
+                    zaladujWynikiZPliku();
+                    obecnyStan = StanGry::WYNIKI;
+                }
+                else if (przyciskWyjdz.getGlobalBounds().contains(pozycjaMyszki)) {
+                    okno.close();
+                }
+            }
+            else if (obecnyStan == StanGry::WYNIKI) {
+                if (przyciskPowrot.getGlobalBounds().contains(pozycjaMyszki)) {
+                    obecnyStan = StanGry::MENU;
+                }
+            }
+            else if (obecnyStan == StanGry::GAME_OVER) {
+                if (przyciskRestart.getGlobalBounds().contains(pozycjaMyszki)) {
+                    zresetujGre();
+                    obecnyStan = StanGry::ROZGRYWKA;
+                }
+                else if (przyciskQuit.getGlobalBounds().contains(pozycjaMyszki)) {
+                    okno.close();
+                }
+            }
+        }
     }
 }
 
 void Gra::aktualizuj(float deltaTime) {
-    for (auto& obiekt : obiektyWGrze) {
-        obiekt->aktualizuj(deltaTime);
-    }
-
-    Gracz* gracz = nullptr;
-    for (auto& obiekt : obiektyWGrze) {
-        if (auto g = dynamic_cast<Gracz*>(obiekt.get())) {
-            gracz = g;
-            break;
-        }
-    }
-
-    if (gracz) {
-        //ruch kamery
-        if (gracz->pobierzPozycje().y < kamera.getCenter().y) {
-            kamera.setCenter(400.f, gracz->pobierzPozycje().y);
+    if (obecnyStan == StanGry::ROZGRYWKA) {
+        for (auto& obiekt : obiektyWGrze) {
+            obiekt->aktualizuj(deltaTime);
         }
 
-        //gameover i zapis wyniku
-
-        if (gracz->pobierzPozycje().y > kamera.getCenter().y + 300.f) {
-            zapiszWynik();
-            okno.close();
-
+        Gracz* gracz = nullptr;
+        for (auto& obiekt : obiektyWGrze) {
+            if (auto g = dynamic_cast<Gracz*>(obiekt.get())) {
+                gracz = g;
+                break;
+            }
         }
 
-        //kolizja
-        if (gracz->pobierzPredkoscY() > 0) {
-            sf::FloatRect graniceGracza = gracz->pobierzGranice();
-            for (auto& obiekt : obiektyWGrze) {
-                if (Platforma* platforma = dynamic_cast<Platforma*>(obiekt.get())) {
-                    if (graniceGracza.intersects(platforma->pobierzGranice())) {
-                        if (graniceGracza.top + graniceGracza.height - 20.f < platforma->pobierzGranice().top) {
-                            gracz->skok();
-                            if (!platforma->bylaDotknieta()) { //dodawanie punktu
-                                platforma->oznaczJakoDotknieta();
-                                obecnyWynik++;
+        if (gracz) {
+            if (gracz->pobierzPozycje().y < kamera.getCenter().y) {
+                kamera.setCenter(400.f, gracz->pobierzPozycje().y);
+            }
+
+            if (gracz->pobierzPozycje().y > kamera.getCenter().y + 300.f) {
+                zapiszWynik();
+                tekstWynikuKoncowego.setString("WYNIK: " + std::to_string(obecnyWynik));
+
+                float camY = kamera.getCenter().y;
+                tekstGameOver.setPosition(240.f, camY - 200.f);
+                tekstWynikuKoncowego.setPosition(320.f, camY - 100.f);
+                przyciskRestart.setPosition(180.f, camY + 50.f);
+                tekstRestart.setPosition(230.f, camY + 60.f);
+                przyciskQuit.setPosition(420.f, camY + 50.f);
+                tekstQuit.setPosition(490.f, camY + 60.f);
+
+                obecnyStan = StanGry::GAME_OVER;
+            }
+
+            if (gracz->pobierzPredkoscY() > 0) {
+                sf::FloatRect graniceGracza = gracz->pobierzGranice();
+                for (auto& obiekt : obiektyWGrze) {
+                    if (Platforma* platforma = dynamic_cast<Platforma*>(obiekt.get())) {
+                        if (graniceGracza.intersects(platforma->pobierzGranice())) {
+                            if (graniceGracza.top + graniceGracza.height - 20.f < platforma->pobierzGranice().top) {
+                                gracz->skok();
+                                if (!platforma->bylaDotknieta()) {
+                                    platforma->oznaczJakoDotknieta();
+                                    obecnyWynik++;
+                                }
                             }
                         }
                     }
                 }
             }
         }
-    }
 
-    //dynamik map
-    generujPlatformy();
-    usunStarePlatformy();
+        generujPlatformy();
+        usunStarePlatformy();
+    }
 }
 
 void Gra::rysuj() {
     okno.clear(sf::Color(15, 15, 30));
 
-    okno.setView(kamera);
-
-    for (auto& obiekt : obiektyWGrze) {
-        obiekt->rysuj(okno);
+    if (obecnyStan == StanGry::ROZGRYWKA) {
+        okno.setView(kamera);
+        for (auto& obiekt : obiektyWGrze) {
+            obiekt->rysuj(okno);
+        }
+    }
+    else if (obecnyStan == StanGry::MENU) {
+        okno.setView(okno.getDefaultView());
+        okno.draw(tekstTytulu);
+        okno.draw(przyciskGraj);
+        okno.draw(tekstGraj);
+        okno.draw(przyciskWynik);
+        okno.draw(tekstWynik);
+        okno.draw(przyciskWyjdz);
+        okno.draw(tekstWyjdz);
+    }
+    else if (obecnyStan == StanGry::GAME_OVER) {
+        okno.setView(kamera);
+        for (auto& obiekt : obiektyWGrze) {
+            obiekt->rysuj(okno);
+        }
+        okno.draw(tekstGameOver);
+        okno.draw(tekstWynikuKoncowego);
+        okno.draw(przyciskRestart);
+        okno.draw(tekstRestart);
+        okno.draw(przyciskQuit);
+        okno.draw(tekstQuit);
+    }
+    else if (obecnyStan == StanGry::WYNIKI) {
+        okno.setView(okno.getDefaultView());
+        okno.draw(tekstNaglowekWynikow);
+        okno.draw(tekstListaWynikow);
+        okno.draw(przyciskPowrot);
+        okno.draw(tekstPowrot);
     }
 
     okno.display();
 }
 
-//tworzenie dynamicznej platformy
 void Gra::generujPlatformy() {
- //jezeli wysoko to generuje platforme
     while (najwyzszaPlatformaY > kamera.getCenter().y - 600.f) {
-        najwyzszaPlatformaY -= 140.f; // Skok w górę między platformami //90 na 140 aby zwiekszyc przerwe
+        najwyzszaPlatformaY -= 140.f;
         float losowyX = rozkladX(generatorRNG);
-
-        // platformy
         obiektyWGrze.push_back(std::make_unique<Platforma>(losowyX, najwyzszaPlatformaY, 120.f));
     }
 }
 
-//optymalizacja pamieci
 void Gra::usunStarePlatformy() {
     float dolEkranu = kamera.getCenter().y + 400.f;
     obiektyWGrze.erase(std::remove_if(obiektyWGrze.begin(), obiektyWGrze.end(),
                                       [dolEkranu](const std::unique_ptr<Obiekt>& obj) {
-                                          //platforma, jezeli jest ponizej ekranu to
                                           if (dynamic_cast<Platforma*>(obj.get())) {
                                               return obj->pobierzPozycje().y > dolEkranu;
                                           }
@@ -138,14 +300,37 @@ void Gra::usunStarePlatformy() {
                                       }), obiektyWGrze.end());
 }
 
-
-
 void Gra::zapiszWynik() {
     std::ofstream plik("wyniki.txt", std::ios::app);
-
-
     if (plik.is_open()) {
         plik << "Wynik gracza: " << obecnyWynik << "\n";
         plik.close();
     }
+}
+
+void Gra::zaladujWynikiZPliku() {
+    std::ifstream plik("wyniki.txt");
+    std::string linia;
+    std::vector<std::string> wszystkieWyniki;
+
+    if (plik.is_open()) {
+        while (std::getline(plik, linia)) {
+            wszystkieWyniki.push_back(linia);
+        }
+        plik.close();
+    }
+
+    std::string tekstDoWyswietlenia = "";
+    int iloscWynikow = wszystkieWyniki.size();
+
+    if (iloscWynikow == 0) {
+        tekstDoWyswietlenia = "Brak rozegranych gier!";
+    } else {
+        int start = std::max(0, iloscWynikow - 5);
+        for (int i = start; i < iloscWynikow; i++) {
+            tekstDoWyswietlenia += wszystkieWyniki[i] + "\n\n";
+        }
+    }
+
+    tekstListaWynikow.setString(tekstDoWyswietlenia);
 }

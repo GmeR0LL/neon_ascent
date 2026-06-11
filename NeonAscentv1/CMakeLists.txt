@@ -24,6 +24,8 @@ add_executable(NeonAscent
     Gracz.cpp
     Platforma.cpp
 
+
+
 )
 
 #sfml

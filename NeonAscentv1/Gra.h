@@ -5,7 +5,10 @@
 #include <vector>
 #include <memory>
 #include <random>
+#include <fstream>
 #include "Obiekt.h"
+
+enum class StanGry { MENU, ROZGRYWKA, GAME_OVER, WYNIKI};
 
 class Gra {
 private:
@@ -20,7 +23,39 @@ private:
     std::uniform_real_distribution<float> rozkladX;
 
     int obecnyWynik;
+    StanGry obecnyStan;
 
+
+    //czcionka z zasobow aby dzialala
+    sf::Font czcionka;
+
+
+    //menu glowne
+    sf::Text tekstTytulu;
+    sf::RectangleShape przyciskGraj;
+    sf::Text tekstGraj;
+    sf::RectangleShape przyciskWynik;
+    sf::Text tekstWynik;
+    sf::RectangleShape przyciskWyjdz;
+    sf::Text tekstWyjdz;
+
+
+    //menu przegranej
+    sf::Text tekstGameOver;
+    sf::Text tekstWynikuKoncowego;
+    sf::RectangleShape przyciskRestart;
+    sf::Text tekstRestart;
+    sf::RectangleShape przyciskQuit;
+    sf::Text tekstQuit;
+
+    //ekran wynikow
+    sf::Text tekstNaglowekWynikow;
+    sf::Text tekstListaWynikow;
+    sf::RectangleShape przyciskPowrot;
+    sf::Text tekstPowrot;
+
+
+    //funkcje pomocniczne
     void obsluzZdarzenia();
     void aktualizuj(float deltaTime);
     void rysuj();
@@ -29,6 +64,14 @@ private:
     void generujPlatformy();
     void usunStarePlatformy();
     void zapiszWynik();
+    void inicjalizujEkranWynikow();
+    void zaladujWynikiZPliku();
+
+
+    //organizacja menu
+    void inicjalizujMenu();
+    void inicjalizujGameOver();
+    void zresetujGre();
 
 public:
     Gra();
