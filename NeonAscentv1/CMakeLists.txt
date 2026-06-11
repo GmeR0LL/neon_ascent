@@ -19,6 +19,7 @@ add_executable(NeonAscent
     gracz.h
     platforma.h
     gra.h
+    Obiekt.h
 
 )
 
