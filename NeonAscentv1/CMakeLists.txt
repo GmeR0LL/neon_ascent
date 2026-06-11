@@ -1,14 +1,23 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.14)
+project(NeonAscent LANGUAGES CXX)
 
-project(NeonAscentv1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(NeonAscentv1 main.cpp)
+#lokalnie
+if(EXISTS "C:/SFML-2.6.1/lib/cmake/SFML")
+    set(SFML_DIR "C:/SFML-2.6.1/lib/cmake/SFML")
+endif()
 
-include(GNUInstallDirs)
-install(TARGETS NeonAscentv1
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+#globalne ustawienie (jak nie dziala to trzeba zmienic #lokalnie na swoja sciezke)
+find_package(SFML 2 COMPONENTS graphics window system REQUIRED)
+
+#pliki wykonawcze
+add_executable(NeonAscent
+    main.cpp
+
 )
+
+#sfml
+target_link_libraries(NeonAscent PRIVATE sfml-graphics sfml-window sfml-system)

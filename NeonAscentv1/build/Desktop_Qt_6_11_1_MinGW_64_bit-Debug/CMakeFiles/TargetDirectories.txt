@@ -1,7 +1,3 @@
-C:/Users/LenOvO/Desktop/github/neon_ascent/NeonAscentv1/build/Desktop_Qt_6_11_1_MinGW_64_bit-Debug/CMakeFiles/NeonAscentv1.dir
+C:/Users/LenOvO/Desktop/github/neon_ascent/NeonAscentv1/build/Desktop_Qt_6_11_1_MinGW_64_bit-Debug/CMakeFiles/NeonAscent.dir
 C:/Users/LenOvO/Desktop/github/neon_ascent/NeonAscentv1/build/Desktop_Qt_6_11_1_MinGW_64_bit-Debug/CMakeFiles/edit_cache.dir
 C:/Users/LenOvO/Desktop/github/neon_ascent/NeonAscentv1/build/Desktop_Qt_6_11_1_MinGW_64_bit-Debug/CMakeFiles/rebuild_cache.dir
-C:/Users/LenOvO/Desktop/github/neon_ascent/NeonAscentv1/build/Desktop_Qt_6_11_1_MinGW_64_bit-Debug/CMakeFiles/list_install_components.dir
-C:/Users/LenOvO/Desktop/github/neon_ascent/NeonAscentv1/build/Desktop_Qt_6_11_1_MinGW_64_bit-Debug/CMakeFiles/install.dir
-C:/Users/LenOvO/Desktop/github/neon_ascent/NeonAscentv1/build/Desktop_Qt_6_11_1_MinGW_64_bit-Debug/CMakeFiles/install/local.dir
-C:/Users/LenOvO/Desktop/github/neon_ascent/NeonAscentv1/build/Desktop_Qt_6_11_1_MinGW_64_bit-Debug/CMakeFiles/install/strip.dir

@@ -84,51 +84,6 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
 
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
-
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-.PHONY : list_install_components/fast
-
-# Special rule for the target install
-install: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
-	C:\Qt\Tools\CMake_64\bin\cmake.exe -P cmake_install.cmake
-.PHONY : install
-
-# Special rule for the target install
-install/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
-	C:\Qt\Tools\CMake_64\bin\cmake.exe -P cmake_install.cmake
-.PHONY : install/fast
-
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
-	C:\Qt\Tools\CMake_64\bin\cmake.exe -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
-
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
-	C:\Qt\Tools\CMake_64\bin\cmake.exe -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
-
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
-	C:\Qt\Tools\CMake_64\bin\cmake.exe -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
-
-# Special rule for the target install/strip
-install/strip/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
-	C:\Qt\Tools\CMake_64\bin\cmake.exe -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip/fast
-
 # The main all target
 all: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\LenOvO\Desktop\github\neon_ascent\NeonAscentv1\build\Desktop_Qt_6_11_1_MinGW_64_bit-Debug\CMakeFiles C:\Users\LenOvO\Desktop\github\neon_ascent\NeonAscentv1\build\Desktop_Qt_6_11_1_MinGW_64_bit-Debug\\CMakeFiles\progress.marks
@@ -161,24 +116,24 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named NeonAscentv1
+# Target rules for targets named NeonAscent
 
 # Build rule for target.
-NeonAscentv1: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 NeonAscentv1
-.PHONY : NeonAscentv1
+NeonAscent: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 NeonAscent
+.PHONY : NeonAscent
 
 # fast build rule for target.
-NeonAscentv1/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscentv1.dir\build.make CMakeFiles/NeonAscentv1.dir/build
-.PHONY : NeonAscentv1/fast
+NeonAscent/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscent.dir\build.make CMakeFiles/NeonAscent.dir/build
+.PHONY : NeonAscent/fast
 
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
 # target to build an object file
 main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscentv1.dir\build.make CMakeFiles/NeonAscentv1.dir/main.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscent.dir\build.make CMakeFiles/NeonAscent.dir/main.cpp.obj
 .PHONY : main.cpp.obj
 
 main.i: main.cpp.i
@@ -186,7 +141,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscentv1.dir\build.make CMakeFiles/NeonAscentv1.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscent.dir\build.make CMakeFiles/NeonAscent.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -194,7 +149,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscentv1.dir\build.make CMakeFiles/NeonAscentv1.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscent.dir\build.make CMakeFiles/NeonAscent.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -204,12 +159,8 @@ help:
 	@echo ... clean
 	@echo ... depend
 	@echo ... edit_cache
-	@echo ... install
-	@echo ... install/local
-	@echo ... install/strip
-	@echo ... list_install_components
 	@echo ... rebuild_cache
-	@echo ... NeonAscentv1
+	@echo ... NeonAscent
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

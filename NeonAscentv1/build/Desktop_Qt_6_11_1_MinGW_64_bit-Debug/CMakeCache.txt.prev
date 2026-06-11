@@ -188,7 +188,7 @@ CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 CMAKE_PROJECT_INCLUDE_BEFORE:FILEPATH=C:/Users/LenOvO/Desktop/github/neon_ascent/NeonAscentv1/build/Desktop_Qt_6_11_1_MinGW_64_bit-Debug/.qtcreator/cmake-helper/qtcreator-project.cmake
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=NeonAscent
+CMAKE_PROJECT_NAME:STATIC=NeonAscentv1
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=C:/Qt/Tools/mingw1310_64/bin/ranlib.exe
@@ -274,15 +274,6 @@ CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
 //Value Computed by CMake
-NeonAscent_BINARY_DIR:STATIC=C:/Users/LenOvO/Desktop/github/neon_ascent/NeonAscentv1/build/Desktop_Qt_6_11_1_MinGW_64_bit-Debug
-
-//Value Computed by CMake
-NeonAscent_IS_TOP_LEVEL:STATIC=ON
-
-//Value Computed by CMake
-NeonAscent_SOURCE_DIR:STATIC=C:/Users/LenOvO/Desktop/github/neon_ascent/NeonAscentv1
-
-//Value Computed by CMake
 NeonAscentv1_BINARY_DIR:STATIC=C:/Users/LenOvO/Desktop/github/neon_ascent/NeonAscentv1/build/Desktop_Qt_6_11_1_MinGW_64_bit-Debug
 
 //Value Computed by CMake
@@ -305,9 +296,6 @@ QT_ENABLE_QML_DEBUG:BOOL=ON
 
 //No help, variable specified on the command line.
 QT_QMAKE_EXECUTABLE:FILEPATH=C:/Qt/6.11.1/mingw_64/bin/qmake.exe
-
-//Path to a file.
-SFML_DOC_DIR:PATH=SFML_DOC_DIR-NOTFOUND
 
 
 ########################
