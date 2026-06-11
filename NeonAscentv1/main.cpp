@@ -6,6 +6,6 @@ using namespace std;
 
 int main(){
     Gra gra;
-    gra.run();
+    gra.uruchom();
     return 0;
 }
