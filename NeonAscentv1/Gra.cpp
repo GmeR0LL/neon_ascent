@@ -23,6 +23,11 @@ Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent - v4") {
     najwyzszaPlatformaY = 400.f;
     obiektyWGrze.push_back(std::make_unique<Platforma>(0.f, 550.f, 800.f));
 
+
+    //pierwsza platforma 100% mozliwa do skoku
+    obiektyWGrze.push_back(std::make_unique<Platforma>(350.f, 400.f, 100.f));
+    najwyzszaPlatformaY = 400.f;
+
     // Wygenerowanie pierwszych platform na start
     generujPlatformy();
 }
@@ -112,7 +117,7 @@ void Gra::rysuj() {
 void Gra::generujPlatformy() {
  //jezeli wysoko to generuje platforme
     while (najwyzszaPlatformaY > kamera.getCenter().y - 600.f) {
-        najwyzszaPlatformaY -= 90.f; // Skok w górę między platformami
+        najwyzszaPlatformaY -= 140.f; // Skok w górę między platformami //90 na 140 aby zwiekszyc przerwe
         float losowyX = rozkladX(generatorRNG);
 
         // platformy
