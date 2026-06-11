@@ -5,6 +5,7 @@
 using namespace std;
 
 int main(){
+    Gra gra;
     gra.run();
     return 0;
 }
