@@ -10,6 +10,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/mateu/OneDrive/Pulpit/neon_ascent/NeonAscentv1/Gra.cpp" "CMakeFiles/NeonAscent.dir/Gra.cpp.obj" "gcc" "CMakeFiles/NeonAscent.dir/Gra.cpp.obj.d"
   "C:/Users/mateu/OneDrive/Pulpit/neon_ascent/NeonAscentv1/Gracz.cpp" "CMakeFiles/NeonAscent.dir/Gracz.cpp.obj" "gcc" "CMakeFiles/NeonAscent.dir/Gracz.cpp.obj.d"
+  "C:/Users/mateu/OneDrive/Pulpit/neon_ascent/NeonAscentv1/Platforma.cpp" "CMakeFiles/NeonAscent.dir/Platforma.cpp.obj" "gcc" "CMakeFiles/NeonAscent.dir/Platforma.cpp.obj.d"
   "C:/Users/mateu/OneDrive/Pulpit/neon_ascent/NeonAscentv1/main.cpp" "CMakeFiles/NeonAscent.dir/main.cpp.obj" "gcc" "CMakeFiles/NeonAscent.dir/main.cpp.obj.d"
   )
 

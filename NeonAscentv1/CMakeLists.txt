@@ -22,6 +22,7 @@ add_executable(NeonAscent
     Obiekt.h
     Gra.cpp
     Gracz.cpp
+    Platforma.cpp
 
 )
 

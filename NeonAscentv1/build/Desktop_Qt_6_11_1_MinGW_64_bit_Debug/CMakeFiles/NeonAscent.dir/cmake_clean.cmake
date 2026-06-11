@@ -3,6 +3,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/NeonAscent.dir/Gra.cpp.obj.d"
   "CMakeFiles/NeonAscent.dir/Gracz.cpp.obj"
   "CMakeFiles/NeonAscent.dir/Gracz.cpp.obj.d"
+  "CMakeFiles/NeonAscent.dir/Platforma.cpp.obj"
+  "CMakeFiles/NeonAscent.dir/Platforma.cpp.obj.d"
   "CMakeFiles/NeonAscent.dir/main.cpp.obj"
   "CMakeFiles/NeonAscent.dir/main.cpp.obj.d"
   "NeonAscent.exe"

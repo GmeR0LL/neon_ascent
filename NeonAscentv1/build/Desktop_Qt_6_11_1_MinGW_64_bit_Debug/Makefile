@@ -176,6 +176,30 @@ Gracz.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscent.dir\build.make CMakeFiles/NeonAscent.dir/Gracz.cpp.s
 .PHONY : Gracz.cpp.s
 
+Platforma.obj: Platforma.cpp.obj
+.PHONY : Platforma.obj
+
+# target to build an object file
+Platforma.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscent.dir\build.make CMakeFiles/NeonAscent.dir/Platforma.cpp.obj
+.PHONY : Platforma.cpp.obj
+
+Platforma.i: Platforma.cpp.i
+.PHONY : Platforma.i
+
+# target to preprocess a source file
+Platforma.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscent.dir\build.make CMakeFiles/NeonAscent.dir/Platforma.cpp.i
+.PHONY : Platforma.cpp.i
+
+Platforma.s: Platforma.cpp.s
+.PHONY : Platforma.s
+
+# target to generate assembly for a file
+Platforma.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscent.dir\build.make CMakeFiles/NeonAscent.dir/Platforma.cpp.s
+.PHONY : Platforma.cpp.s
+
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
@@ -215,6 +239,9 @@ help:
 	@echo ... Gracz.obj
 	@echo ... Gracz.i
 	@echo ... Gracz.s
+	@echo ... Platforma.obj
+	@echo ... Platforma.i
+	@echo ... Platforma.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
