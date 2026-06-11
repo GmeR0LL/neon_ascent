@@ -128,6 +128,30 @@ NeonAscent/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscent.dir\build.make CMakeFiles/NeonAscent.dir/build
 .PHONY : NeonAscent/fast
 
+Gra.obj: Gra.cpp.obj
+.PHONY : Gra.obj
+
+# target to build an object file
+Gra.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscent.dir\build.make CMakeFiles/NeonAscent.dir/Gra.cpp.obj
+.PHONY : Gra.cpp.obj
+
+Gra.i: Gra.cpp.i
+.PHONY : Gra.i
+
+# target to preprocess a source file
+Gra.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscent.dir\build.make CMakeFiles/NeonAscent.dir/Gra.cpp.i
+.PHONY : Gra.cpp.i
+
+Gra.s: Gra.cpp.s
+.PHONY : Gra.s
+
+# target to generate assembly for a file
+Gra.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\NeonAscent.dir\build.make CMakeFiles/NeonAscent.dir/Gra.cpp.s
+.PHONY : Gra.cpp.s
+
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
@@ -161,6 +185,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... NeonAscent
+	@echo ... Gra.obj
+	@echo ... Gra.i
+	@echo ... Gra.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

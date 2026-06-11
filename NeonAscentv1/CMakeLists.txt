@@ -18,8 +18,9 @@ add_executable(NeonAscent
     main.cpp
     gracz.h
     platforma.h
-    gra.h
+    Gra.h
     Obiekt.h
+    Gra.cpp
 
 )
 

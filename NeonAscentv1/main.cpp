@@ -1,5 +1,5 @@
 #include <iostream>
-#include "gra.h"
+#include "Gra.h"
 #include "platforma.h"
 
 using namespace std;
