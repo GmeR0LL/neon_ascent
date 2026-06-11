@@ -64,13 +64,6 @@ void Gra::aktualizuj(float deltaTime) {
             kamera.setCenter(400.f, gracz->pobierzPozycje().y);
         }
 
-
-        //obliczanie wyniku
-        int wynikZWysokosci = 400 - static_cast<int>(gracz->pobierzPozycje().y);
-        if (wynikZWysokosci > obecnyWynik) {
-            obecnyWynik = wynikZWysokosci;
-        }
-
         //gameover i zapis wyniku
 
         if (gracz->pobierzPozycje().y > kamera.getCenter().y + 300.f) {
@@ -87,6 +80,10 @@ void Gra::aktualizuj(float deltaTime) {
                     if (graniceGracza.intersects(platforma->pobierzGranice())) {
                         if (graniceGracza.top + graniceGracza.height - 20.f < platforma->pobierzGranice().top) {
                             gracz->skok();
+                            if (!platforma->bylaDotknieta()) { //dodawanie punktu
+                                platforma->oznaczJakoDotknieta();
+                                obecnyWynik++;
+                            }
                         }
                     }
                 }
@@ -140,8 +137,10 @@ void Gra::usunStarePlatformy() {
 
 void Gra::zapiszWynik() {
     std::ofstream plik("wyniki.txt", std::ios::app);
+
+
     if (plik.is_open()) {
-        plik << "Wynik gracza (na bazie wysokosci): " << obecnyWynik << "\n";
+        plik << "Wynik gracza: " << obecnyWynik << "\n";
         plik.close();
     }
 }

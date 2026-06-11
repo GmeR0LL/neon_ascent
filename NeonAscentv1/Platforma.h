@@ -6,12 +6,16 @@
 class Platforma : public Obiekt {
 private:
     sf::RectangleShape ksztalt;
+    bool czyDotknieta;
 
 public:
     Platforma(float x, float y, float szerokosc);
     void aktualizuj(float deltaTime) override;
     void rysuj(sf::RenderWindow& okno) override;
     sf::FloatRect pobierzGranice() const override;
+
+    bool bylaDotknieta() const { return czyDotknieta; }
+    void oznaczJakoDotknieta();
 };
 
 #endif // PLATFORMA_H
