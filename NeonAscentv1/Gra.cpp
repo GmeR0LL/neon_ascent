@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <cmath>
 
 
 Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent") {
@@ -174,6 +175,11 @@ void Gra::zresetujGre() {
     obiektyWGrze.clear();
     obecnyWynik = 0;
 
+    // Resetowanie staminy i kamery
+    najwyzszyPunktY = 300.f;
+    wynikOstatniegoDoubleJumpa = 0;
+    poprzedniaMana = 1;
+
     kamera.setSize(800.f, 600.f);
     kamera.setCenter(400.f, 300.f);
 
@@ -241,33 +247,64 @@ void Gra::aktualizuj(float deltaTime) {
         }
 
         if (gracz) {
-            if (gracz->pobierzPozycje().y < kamera.getCenter().y) {
-                kamera.setCenter(400.f, gracz->pobierzPozycje().y);
+            // ---------------------------------- Płynna kamera i limit spadania ------------------------------------
+            if (gracz->pobierzPozycje().y < najwyzszyPunktY) {
+                najwyzszyPunktY = gracz->pobierzPozycje().y;
             }
 
-            if (gracz->pobierzPozycje().y > kamera.getCenter().y + 300.f && gracz->pobierzPredkoscY() > 0.f) {
-                kamera.setCenter(400.f, kamera.getCenter().y + 280.f);
+            float celKameraY = gracz->pobierzPozycje().y;
+            if (celKameraY > najwyzszyPunktY + 280.f) celKameraY = najwyzszyPunktY + 280.f;
+            if (celKameraY < najwyzszyPunktY) celKameraY = najwyzszyPunktY;
+
+            // Interpolacja płynnego przejścia kamery
+            float obecnyKameraY = kamera.getCenter().y;
+            kamera.setCenter(400.f, obecnyKameraY + (celKameraY - obecnyKameraY) * 4.f * deltaTime);
+
+            //Zarządzanie staminą
+            if (gracz->pobierzMane() == 0 && poprzedniaMana == 1) {
+                wynikOstatniegoDoubleJumpa = obecnyWynik;
+            }
+            poprzedniaMana = gracz->pobierzMane();
+
+            if (gracz->pobierzMane() == 0 && (obecnyWynik - wynikOstatniegoDoubleJumpa >= 10)) {
                 gracz->odnawijMane();
             }
+
+            // ---------------------------------------- Koniec Gry po spadku z kadru ---------------------------
+            if (gracz->pobierzPozycje().y > najwyzszyPunktY + 280.f + 300.f) {
+                zapiszWynik();
+                tekstWynikuKoncowego.setString("WYNIK: " + std::to_string(obecnyWynik));
+
+                float camY = kamera.getCenter().y;
+                tekstGameOver.setPosition(240.f, camY - 200.f);
+                tekstWynikuKoncowego.setPosition(320.f, camY - 100.f);
+                przyciskRestart.setPosition(180.f, camY + 50.f);
+                tekstRestart.setPosition(230.f, camY + 60.f);
+                przyciskQuit.setPosition(420.f, camY + 50.f);
+                tekstQuit.setPosition(490.f, camY + 60.f);
+
+                obecnyStan = StanGry::GAME_OVER;
+            }
+
+            //Kolizja ----- BONUS
             sf::FloatRect graniceGracza = gracz->pobierzGranice();
             for (auto& obiekt : obiektyWGrze) {
                 if (Bonus* bonus = dynamic_cast<Bonus*>(obiekt.get())) {
                     if (!bonus->czyZebrany() && graniceGracza.intersects(bonus->pobierzGranice())) {
                         bonus->zbierz();
-                        gracz->superSkok(); // Wystrzał w górę!
-                        obecnyWynik += 10;  // Nagroda za znalezienie bonusu i pominięcie platform
+                        gracz->superSkok();
+                        obecnyWynik += 10;  // Nagroda za bonus od razu ładuje też staminę!
                     }
                 }
             }
 
+            //Kolizja -------- PLATFORMA
             if (gracz->pobierzPredkoscY() > 0) {
-                sf::FloatRect graniceGracza = gracz->pobierzGranice();
                 for (auto& obiekt : obiektyWGrze) {
                     if (Platforma* platforma = dynamic_cast<Platforma*>(obiekt.get())) {
                         if (platforma->czyAktywna() && graniceGracza.intersects(platforma->pobierzGranice())) {
                             if (graniceGracza.top + graniceGracza.height - 20.f < platforma->pobierzGranice().top) {
                                 gracz->rozpoczynijEfektLadowania();
-                                gracz->odnawijMane();
                                 gracz->skok();
                                 if (!platforma->bylaDotknieta()) {
                                     platforma->oznaczJakoDotknieta();
@@ -297,6 +334,52 @@ void Gra::rysuj() {
             obiekt->rysuj(okno);
         }
         okno.draw(tekstObecnyWynik);
+
+        //UI KOLO STAMINY
+        float uiLewo = kamera.getCenter().x - 380.f;
+        float uiGora = kamera.getCenter().y - 280.f;
+
+        // Szary podkład
+        sf::CircleShape tloKola(16.f);
+        tloKola.setFillColor(sf::Color(45, 45, 60));
+        tloKola.setPosition(uiLewo, uiGora);
+        okno.draw(tloKola);
+
+        float postep = 0.f;
+        Gracz* gracz = nullptr;
+        for (auto& obiekt : obiektyWGrze) {
+            if (auto g = dynamic_cast<Gracz*>(obiekt.get())) {
+                gracz = g;
+                break;
+            }
+        }
+
+        if (gracz) {
+            if (gracz->pobierzMane() > 0) {
+                postep = 1.f;
+            } else {
+                postep = static_cast<float>(obecnyWynik - wynikOstatniegoDoubleJumpa) / 10.f;
+                if (postep > 1.f) postep = 1.f;
+                if (postep < 0.f) postep = 0.f;
+            }
+        }
+
+        // TriangleFan do paska postępu
+        sf::VertexArray koloLadowania(sf::TriangleFan);
+        sf::Vector2f srodek(uiLewo + 16.f, uiGora + 16.f);
+        sf::Color kolorWskaznika = (postep >= 1.f) ? sf::Color::Green : sf::Color::Cyan;
+
+        koloLadowania.append(sf::Vertex(srodek, kolorWskaznika));
+        int iloscPunktowKola = 30;
+        for (int i = 0; i <= iloscPunktowKola * postep; ++i) {
+            float kat = (i * 360.f / iloscPunktowKola) - 90.f;
+            float rad = kat * 3.14159265f / 180.f;
+            koloLadowania.append(sf::Vertex(sf::Vector2f(srodek.x + std::cos(rad) * 16.f, srodek.y + std::sin(rad) * 16.f), kolorWskaznika));
+        }
+
+        if (postep > 0.f) {
+            okno.draw(koloLadowania);
+        }
     }
     else if (obecnyStan == StanGry::MENU) {
         okno.setView(okno.getDefaultView());

@@ -25,6 +25,10 @@ private:
     int obecnyWynik;
     StanGry obecnyStan;
 
+    float najwyzszyPunktY; //sledzenie punktu
+    int wynikOstatniegoDoubleJumpa;
+    int poprzedniaMana;
+
 
     //czcionka z zasobow aby dzialala
     sf::Font czcionka;
