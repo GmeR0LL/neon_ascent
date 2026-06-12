@@ -245,19 +245,9 @@ void Gra::aktualizuj(float deltaTime) {
                 kamera.setCenter(400.f, gracz->pobierzPozycje().y);
             }
 
-            if (gracz->pobierzPozycje().y > kamera.getCenter().y + 300.f) {
-                zapiszWynik();
-                tekstWynikuKoncowego.setString("WYNIK: " + std::to_string(obecnyWynik));
-
-                float camY = kamera.getCenter().y;
-                tekstGameOver.setPosition(240.f, camY - 200.f);
-                tekstWynikuKoncowego.setPosition(320.f, camY - 100.f);
-                przyciskRestart.setPosition(180.f, camY + 50.f);
-                tekstRestart.setPosition(230.f, camY + 60.f);
-                przyciskQuit.setPosition(420.f, camY + 50.f);
-                tekstQuit.setPosition(490.f, camY + 60.f);
-
-                obecnyStan = StanGry::GAME_OVER;
+            if (gracz->pobierzPozycje().y > kamera.getCenter().y + 300.f && gracz->pobierzPredkoscY() > 0.f) {
+                kamera.setCenter(400.f, kamera.getCenter().y + 280.f);
+                gracz->odnawijMane();
             }
             sf::FloatRect graniceGracza = gracz->pobierzGranice();
             for (auto& obiekt : obiektyWGrze) {
@@ -276,6 +266,8 @@ void Gra::aktualizuj(float deltaTime) {
                     if (Platforma* platforma = dynamic_cast<Platforma*>(obiekt.get())) {
                         if (platforma->czyAktywna() && graniceGracza.intersects(platforma->pobierzGranice())) {
                             if (graniceGracza.top + graniceGracza.height - 20.f < platforma->pobierzGranice().top) {
+                                gracz->rozpoczynijEfektLadowania();
+                                gracz->odnawijMane();
                                 gracz->skok();
                                 if (!platforma->bylaDotknieta()) {
                                     platforma->oznaczJakoDotknieta();
@@ -355,7 +347,7 @@ void Gra::rysujTlo() {
     }
 
     if (teksturaGwiazdMalych.getSize().y > 0) {
-        int przesuniecie = static_cast<int>(-kamera.getCenter().y * 0.35f) % static_cast<int>(teksturaGwiazdMalych.getSize().y);
+        int przesuniecie = static_cast<int>(kamera.getCenter().y * 0.35f) % static_cast<int>(teksturaGwiazdMalych.getSize().y);
         if (przesuniecie < 0) przesuniecie += static_cast<int>(teksturaGwiazdMalych.getSize().y);
         gwiazdyMale.setPosition(lewyBrzeg, gornyBrzeg);
         gwiazdyMale.setTextureRect(sf::IntRect(0, przesuniecie, static_cast<int>(rozmiarWidoku.x), static_cast<int>(rozmiarWidoku.y)));
@@ -363,7 +355,7 @@ void Gra::rysujTlo() {
     }
 
     if (teksturaGwiazdDuzych.getSize().y > 0) {
-        int przesuniecie = static_cast<int>(-kamera.getCenter().y * 0.55f) % static_cast<int>(teksturaGwiazdDuzych.getSize().y);
+        int przesuniecie = static_cast<int>(kamera.getCenter().y * 0.55f) % static_cast<int>(teksturaGwiazdDuzych.getSize().y);
         if (przesuniecie < 0) przesuniecie += static_cast<int>(teksturaGwiazdDuzych.getSize().y);
         gwiazdyDuze.setPosition(lewyBrzeg, gornyBrzeg);
         gwiazdyDuze.setTextureRect(sf::IntRect(0, przesuniecie, static_cast<int>(rozmiarWidoku.x), static_cast<int>(rozmiarWidoku.y)));
