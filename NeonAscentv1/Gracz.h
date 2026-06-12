@@ -16,6 +16,7 @@ public:
     void rysuj(sf::RenderWindow& okno) override;
     sf::FloatRect pobierzGranice() const override;
     void skok();
+    void superSkok();
     float pobierzPredkoscY() const { return predkosc.y; }
 };
 

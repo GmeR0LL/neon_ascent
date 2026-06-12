@@ -1,3 +1,4 @@
+#include "Bonus.h"
 #include "Gra.h"
 #include "Gracz.h"
 #include "Platforma.h"
@@ -219,6 +220,16 @@ void Gra::aktualizuj(float deltaTime) {
 
                 obecnyStan = StanGry::GAME_OVER;
             }
+            sf::FloatRect graniceGracza = gracz->pobierzGranice();
+            for (auto& obiekt : obiektyWGrze) {
+                if (Bonus* bonus = dynamic_cast<Bonus*>(obiekt.get())) {
+                    if (!bonus->czyZebrany() && graniceGracza.intersects(bonus->pobierzGranice())) {
+                        bonus->zbierz();
+                        gracz->superSkok(); // Wystrzał w górę!
+                        obecnyWynik += 10;  // Nagroda za znalezienie bonusu i pominięcie platform
+                    }
+                }
+            }
 
             if (gracz->pobierzPredkoscY() > 0) {
                 sf::FloatRect graniceGracza = gracz->pobierzGranice();
@@ -311,7 +322,16 @@ void Gra::generujPlatformy() {
 
 
         obiektyWGrze.push_back(std::make_unique<Platforma>(losowyX, najwyzszaPlatformaY, 120.f, wylosowanyTyp));
+
+        if (obecnyWynik >= 5) {
+            std::uniform_int_distribution<int> losujBonus(1, 100);
+            if (losujBonus(generatorRNG) <= 10) {
+                obiektyWGrze.push_back(std::make_unique<Bonus>(losowyX + 45.f, najwyzszaPlatformaY - 40.f));
+            }
+        }
     }
+
+
 }
 
 void Gra::usunStarePlatformy() {
@@ -320,6 +340,10 @@ void Gra::usunStarePlatformy() {
                                       [dolEkranu](const std::unique_ptr<Obiekt>& obj) {
                                           if (dynamic_cast<Platforma*>(obj.get())) {
                                               return obj->pobierzPozycje().y > dolEkranu;
+                                          }
+                                          if (Bonus* b = dynamic_cast<Bonus*>(obj.get())) {
+                                              // Usuwamy bonus jeśli wypadł z ekranu LUB jeśli gracz go zebrał
+                                              return b->pobierzPozycje().y > dolEkranu || b->czyZebrany();
                                           }
                                           return false;
                                       }), obiektyWGrze.end());

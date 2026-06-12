@@ -44,3 +44,7 @@ void Gracz::rysuj(sf::RenderWindow& okno) {
 sf::FloatRect Gracz::pobierzGranice() const {
     return ksztalt.getGlobalBounds();
 }
+
+void Gracz::superSkok() {
+    predkosc.y = -2200.f; // Wystrzeliwuje gracza wysoko w górę
+}

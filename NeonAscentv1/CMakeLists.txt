@@ -23,16 +23,13 @@ add_executable(NeonAscent
     Gra.cpp
     Gracz.cpp
     Platforma.cpp
+    Bonus.h
+    Bonus.cpp
 
 
 
 )
-add_custom_command(
-    TARGET NeonAscent POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_CURRENT_SOURCE_DIR}/media"
-    "$<TARGET_FILE_DIR:NeonAscent>/media"
-)
+
 
 #sfml
 target_link_libraries(NeonAscent PRIVATE sfml-graphics sfml-window sfml-system)
