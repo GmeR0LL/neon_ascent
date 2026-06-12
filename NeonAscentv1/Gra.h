@@ -34,9 +34,12 @@ private:
     sf::Font czcionka;
 
     //dynamiczne tlo
-    std::vector<sf::Texture> teksturyTla;
-    std::vector<sf::Sprite> warstwyTla;
-    std::vector<float> predkosciParalaksy;
+    sf::Texture teksturaTla;
+    sf::Texture teksturaGwiazdMalych;
+    sf::Texture teksturaGwiazdDuzych;
+    sf::Sprite tlo;
+    sf::Sprite gwiazdyMale;
+    sf::Sprite gwiazdyDuze;
 
 
     //menu glowne
