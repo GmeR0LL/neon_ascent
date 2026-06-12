@@ -11,8 +11,8 @@ private:
 
     TypPlatformy typ;
     float zegarMigotania;
-    bool widoczna,
-        bool zniszczona;
+    bool widoczna;
+    bool zniszczona;
 
 public:
     Platforma(float x, float y, float szerokosc, TypPlatformy typPlatformy = TypPlatformy::ZWYKLA);

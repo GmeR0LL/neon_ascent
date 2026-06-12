@@ -57,5 +57,9 @@ void Platforma::oznaczJakoDotknieta() {
     else if (typ == TypPlatformy::ZWYKLA) {
         ksztalt.setFillColor(sf::Color(100, 0, 100)); // Zwykła tylko ciemnieje
     }
-    ksztalt.setFillColor(sf::Color(100, 0, 100)); //ciemny roz
+
  }
+
+bool Platforma::czyAktywna() const {
+    return widoczna && !zniszczona;
+}

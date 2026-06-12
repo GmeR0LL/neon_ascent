@@ -5,12 +5,13 @@
 #include <fstream>
 #include <iostream>
 
+
 Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent") {
     okno.setFramerateLimit(60);
     obecnyStan = StanGry::MENU;
 
     //zaladowanie czcionki
-    if (!czcionka.loadFromFile("media/czcionka.ttf")) {
+    if (!czcionka.loadFromFile("mediamedia/czcionka.ttf")) {
         std::cout << "Blad ladowania czcionki! Upewnij sie, ze plik jest w folderze media/czcionka.ttf\n";
     }
 
@@ -127,6 +128,9 @@ void Gra::uruchom() {
 }
 
 void Gra::zresetujGre() {
+    tekstObecnyWynik.setFont(czcionka);
+    tekstObecnyWynik.setCharacterSize(24);
+    tekstObecnyWynik.setFillColor(sf::Color::White);
     obiektyWGrze.clear();
     obecnyWynik = 0;
 
@@ -220,7 +224,7 @@ void Gra::aktualizuj(float deltaTime) {
                 sf::FloatRect graniceGracza = gracz->pobierzGranice();
                 for (auto& obiekt : obiektyWGrze) {
                     if (Platforma* platforma = dynamic_cast<Platforma*>(obiekt.get())) {
-                        if (graniceGracza.intersects(platforma->pobierzGranice())) {
+                        if (platforma->czyAktywna() && graniceGracza.intersects(platforma->pobierzGranice())) {
                             if (graniceGracza.top + graniceGracza.height - 20.f < platforma->pobierzGranice().top) {
                                 gracz->skok();
                                 if (!platforma->bylaDotknieta()) {
@@ -232,6 +236,8 @@ void Gra::aktualizuj(float deltaTime) {
                     }
                 }
             }
+            tekstObecnyWynik.setString("Wynik: " + std::to_string(obecnyWynik));
+            tekstObecnyWynik.setPosition(kamera.getCenter().x + 250.f, kamera.getCenter().y - 280.f);
         }
 
         generujPlatformy();
@@ -247,6 +253,7 @@ void Gra::rysuj() {
         for (auto& obiekt : obiektyWGrze) {
             obiekt->rysuj(okno);
         }
+        okno.draw(tekstObecnyWynik);
     }
     else if (obecnyStan == StanGry::MENU) {
         okno.setView(okno.getDefaultView());
@@ -263,6 +270,7 @@ void Gra::rysuj() {
         for (auto& obiekt : obiektyWGrze) {
             obiekt->rysuj(okno);
         }
+        okno.draw(tekstObecnyWynik);
         okno.draw(tekstGameOver);
         okno.draw(tekstWynikuKoncowego);
         okno.draw(przyciskRestart);
@@ -285,7 +293,24 @@ void Gra::generujPlatformy() {
     while (najwyzszaPlatformaY > kamera.getCenter().y - 600.f) {
         najwyzszaPlatformaY -= 140.f;
         float losowyX = rozkladX(generatorRNG);
-        obiektyWGrze.push_back(std::make_unique<Platforma>(losowyX, najwyzszaPlatformaY, 120.f));
+
+        TypPlatformy wylosowanyTyp = TypPlatformy::ZWYKLA;
+
+        std::uniform_int_distribution<int> losujSzansę(1, 100);
+        int szansa = losujSzansę(generatorRNG);
+
+        if(obecnyWynik >= 25)
+        {
+            if (szansa <= 30) wylosowanyTyp = TypPlatformy::MIGAJACA;
+            else if (szansa <= 60) wylosowanyTyp = TypPlatformy::KRUCHA;
+        }
+        else if(obecnyWynik >= 15)
+        {
+            if (szansa <= 40) wylosowanyTyp = TypPlatformy::KRUCHA;
+        }
+
+
+        obiektyWGrze.push_back(std::make_unique<Platforma>(losowyX, najwyzszaPlatformaY, 120.f, wylosowanyTyp));
     }
 }
 

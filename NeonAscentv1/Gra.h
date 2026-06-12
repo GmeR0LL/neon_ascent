@@ -73,6 +73,8 @@ private:
     void inicjalizujGameOver();
     void zresetujGre();
 
+     sf::Text tekstObecnyWynik; //Licznik w rogu
+
 public:
     Gra();
     void uruchom();
