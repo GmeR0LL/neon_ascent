@@ -1,0 +1,3 @@
+Wynik gracza: 26
+Wynik gracza: 1
+Wynik gracza: 5
