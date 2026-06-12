@@ -14,7 +14,7 @@ Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent") {
 
     //zaladowanie czcionki
     if (!czcionka.loadFromFile("media/czcionka.ttf")) {
-        std::cout << "Blad ladowania czcionki! Upewnij sie, ze plik jest w folderze media/czcionka.ttf\n";
+        std::cout << "Blad ladowania czcionki. media/czcionka.ttf\n";
     }
 
     inicjalizujTlo();
@@ -34,42 +34,38 @@ Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent") {
 }
 
 void Gra::inicjalizujTlo() {
-    const char* sciezkaTla = "media/Backgroud/Nebula Blue.png";
-    if (!std::ifstream(sciezkaTla).good()) sciezkaTla = "../../media/Backgroud/Nebula Blue.png";
+    //tlo
+    std::vector<std::string> sciezki = {
+        "media/Background/Sky.png",
+        "media/Background/Buildings 4.png",
+        "media/Background/Buildings 3.png",
+        "media/Background/Buildings 2.png",
+        "media/Background/Buildings 1.png"
+    };
 
-    if (teksturaTla.loadFromFile(sciezkaTla)) {
-        teksturaTla.setRepeated(true);
-        tlo.setTexture(teksturaTla);
-    }
-    else {
-        std::cout << "Blad ladowania tla: " << sciezkaTla << "\n";
-    }
+    // Prędkośc opadania tla
+    predkosciParalaksy = { 0.0f, 0.05f, 0.15f, 0.30f, 0.50f };
 
-    const char* sciezkaGwiazdMalych = "media/Backgroud/Stars Small_1.png";
-    if (!std::ifstream(sciezkaGwiazdMalych).good()) sciezkaGwiazdMalych = "../../media/Backgroud/Stars Small_1.png";
+    for (size_t i = 0; i < sciezki.size(); ++i) {
+        std::string sciezka = sciezki[i];
+        if (!std::ifstream(sciezka).good()) sciezka = "../../" + sciezka;
 
-    if (teksturaGwiazdMalych.loadFromFile(sciezkaGwiazdMalych)) {
-        teksturaGwiazdMalych.setRepeated(true);
-        gwiazdyMale.setTexture(teksturaGwiazdMalych);
-        gwiazdyMale.setColor(sf::Color(255, 255, 255, 170));
-    }
-    else {
-        std::cout << "Blad ladowania tla: " << sciezkaGwiazdMalych << "\n";
-    }
+        sf::Texture tekstura;
+        if (tekstura.loadFromFile(sciezka)) {
+            // Zapętlenie poziom
+            tekstura.setRepeated(true);
+            teksturyTla.push_back(tekstura);
 
-    const char* sciezkaGwiazdDuzych = "media/Backgroud/Stars-Big_1_1_PC.png";
-    if (!std::ifstream(sciezkaGwiazdDuzych).good()) sciezkaGwiazdDuzych = "../../media/Backgroud/Stars-Big_1_1_PC.png";
-
-    if (teksturaGwiazdDuzych.loadFromFile(sciezkaGwiazdDuzych)) {
-        teksturaGwiazdDuzych.setRepeated(true);
-        gwiazdyDuze.setTexture(teksturaGwiazdDuzych);
-        gwiazdyDuze.setColor(sf::Color(255, 255, 255, 210));
-    }
-    else {
-        std::cout << "Blad ladowania tla: " << sciezkaGwiazdDuzych << "\n";
+            sf::Sprite sprite;
+            sprite.setTexture(teksturyTla.back());
+            sprite.setScale(4.f, 4.f);
+            warstwyTla.push_back(sprite);
+        }
+        else {
+            std::cout << "Blad ladowania warstwy tla: " << sciezka << "\n";
+        }
     }
 }
-
 void Gra::inicjalizujMenu() {
     tekstTytulu.setFont(czcionka);
     tekstTytulu.setString("NEON ASCENT");
@@ -420,32 +416,35 @@ void Gra::rysujTlo() {
     sf::Vector2f rozmiarWidoku = kamera.getSize();
     float lewyBrzeg = kamera.getCenter().x - rozmiarWidoku.x / 2.f;
     float gornyBrzeg = kamera.getCenter().y - rozmiarWidoku.y / 2.f;
+    float dolnyBrzeg = kamera.getCenter().y + rozmiarWidoku.y / 2.f;
 
-    if (teksturaTla.getSize().y > 0) {
-        int przesuniecie = static_cast<int>(-kamera.getCenter().y * 0.12f) % static_cast<int>(teksturaTla.getSize().y);
-        if (przesuniecie < 0) przesuniecie += static_cast<int>(teksturaTla.getSize().y);
-        tlo.setPosition(lewyBrzeg, gornyBrzeg);
-        tlo.setTextureRect(sf::IntRect(0, przesuniecie, static_cast<int>(rozmiarWidoku.x), static_cast<int>(rozmiarWidoku.y)));
-        okno.draw(tlo);
-    }
+    for (size_t i = 0; i < warstwyTla.size(); ++i) {
+        float skala = warstwyTla[i].getScale().y;
+        float wysokoscTekstury = teksturyTla[i].getSize().y;
 
-    if (teksturaGwiazdMalych.getSize().y > 0) {
-        int przesuniecie = static_cast<int>(kamera.getCenter().y * 0.35f) % static_cast<int>(teksturaGwiazdMalych.getSize().y);
-        if (przesuniecie < 0) przesuniecie += static_cast<int>(teksturaGwiazdMalych.getSize().y);
-        gwiazdyMale.setPosition(lewyBrzeg, gornyBrzeg);
-        gwiazdyMale.setTextureRect(sf::IntRect(0, przesuniecie, static_cast<int>(rozmiarWidoku.x), static_cast<int>(rozmiarWidoku.y)));
-        okno.draw(gwiazdyMale);
-    }
+        if (i == 0) {
+            //niebo
+            warstwyTla[i].setPosition(lewyBrzeg, gornyBrzeg);
 
-    if (teksturaGwiazdDuzych.getSize().y > 0) {
-        int przesuniecie = static_cast<int>(kamera.getCenter().y * 0.55f) % static_cast<int>(teksturaGwiazdDuzych.getSize().y);
-        if (przesuniecie < 0) przesuniecie += static_cast<int>(teksturaGwiazdDuzych.getSize().y);
-        gwiazdyDuze.setPosition(lewyBrzeg, gornyBrzeg);
-        gwiazdyDuze.setTextureRect(sf::IntRect(0, przesuniecie, static_cast<int>(rozmiarWidoku.x), static_cast<int>(rozmiarWidoku.y)));
-        okno.draw(gwiazdyDuze);
+            //poprawione
+            warstwyTla[i].setTextureRect(sf::IntRect(0, 0, static_cast<int>(rozmiarWidoku.x / skala) + 2, static_cast<int>(wysokoscTekstury)));
+            okno.draw(warstwyTla[i]);
+        }
+        else {
+            //budynki
+            float skokWznoszenia = 300.f - kamera.getCenter().y;
+            if (skokWznoszenia < 0) skokWznoszenia = 0;
+            float przesuniecieWDol = skokWznoszenia * predkosciParalaksy[i];
+
+            //"kotwiczka" main tlo
+            float pozycjaY = dolnyBrzeg - (wysokoscTekstury * skala) + przesuniecieWDol;
+            warstwyTla[i].setPosition(lewyBrzeg, pozycjaY);
+            warstwyTla[i].setTextureRect(sf::IntRect(0, 0, static_cast<int>(rozmiarWidoku.x / skala) + 2, static_cast<int>(wysokoscTekstury)));
+
+            okno.draw(warstwyTla[i]);
+        }
     }
 }
-
 void Gra::generujPlatformy() {
     while (najwyzszaPlatformaY > kamera.getCenter().y - 600.f) {
         najwyzszaPlatformaY -= 140.f;

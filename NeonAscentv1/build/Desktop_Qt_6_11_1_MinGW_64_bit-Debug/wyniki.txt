@@ -47,3 +47,5 @@ Wynik gracza: 13
 Wynik gracza: 1
 Wynik gracza: 4
 Wynik gracza: 45
+Wynik gracza: 36
+Wynik gracza: 66

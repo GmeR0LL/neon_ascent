@@ -121,7 +121,7 @@ void Gracz::aktualizuj(float deltaTime) {
         const sf::IntRect& klatka = prostokatyAnimacji[obecnaKlatka];
         slime.setOrigin(klatka.width / 2.f, klatka.height / 2.f);
         slime.setPosition(pozycja.x + 15.f, pozycja.y + 15.f);
-        slime.setScale(patrzyWLewo ? -skala.x : skala.x, skala.y);
+        slime.setScale(patrzyWLewo ? skala.x : -skala.x, skala.y);
     }
 }
 
