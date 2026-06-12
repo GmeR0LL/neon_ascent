@@ -29,6 +29,14 @@ private:
     //czcionka z zasobow aby dzialala
     sf::Font czcionka;
 
+    //dynamiczne tlo
+    sf::Texture teksturaTla;
+    sf::Texture teksturaGwiazdMalych;
+    sf::Texture teksturaGwiazdDuzych;
+    sf::Sprite tlo;
+    sf::Sprite gwiazdyMale;
+    sf::Sprite gwiazdyDuze;
+
 
     //menu glowne
     sf::Text tekstTytulu;
@@ -71,6 +79,8 @@ private:
     //organizacja menu
     void inicjalizujMenu();
     void inicjalizujGameOver();
+    void inicjalizujTlo();
+    void rysujTlo();
     void zresetujGre();
 
      sf::Text tekstObecnyWynik; //Licznik w rogu

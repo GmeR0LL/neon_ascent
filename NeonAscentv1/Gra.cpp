@@ -12,9 +12,11 @@ Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent") {
     obecnyStan = StanGry::MENU;
 
     //zaladowanie czcionki
-    if (!czcionka.loadFromFile("mediamedia/czcionka.ttf")) {
+    if (!czcionka.loadFromFile("media/czcionka.ttf")) {
         std::cout << "Blad ladowania czcionki! Upewnij sie, ze plik jest w folderze media/czcionka.ttf\n";
     }
+
+    inicjalizujTlo();
 
     //generator
     std::random_device rd;
@@ -28,6 +30,43 @@ Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent") {
     inicjalizujEkranWynikow();
 
     zresetujGre();
+}
+
+void Gra::inicjalizujTlo() {
+    const char* sciezkaTla = "media/Backgroud/Nebula Blue.png";
+    if (!std::ifstream(sciezkaTla).good()) sciezkaTla = "../../media/Backgroud/Nebula Blue.png";
+
+    if (teksturaTla.loadFromFile(sciezkaTla)) {
+        teksturaTla.setRepeated(true);
+        tlo.setTexture(teksturaTla);
+    }
+    else {
+        std::cout << "Blad ladowania tla: " << sciezkaTla << "\n";
+    }
+
+    const char* sciezkaGwiazdMalych = "media/Backgroud/Stars Small_1.png";
+    if (!std::ifstream(sciezkaGwiazdMalych).good()) sciezkaGwiazdMalych = "../../media/Backgroud/Stars Small_1.png";
+
+    if (teksturaGwiazdMalych.loadFromFile(sciezkaGwiazdMalych)) {
+        teksturaGwiazdMalych.setRepeated(true);
+        gwiazdyMale.setTexture(teksturaGwiazdMalych);
+        gwiazdyMale.setColor(sf::Color(255, 255, 255, 170));
+    }
+    else {
+        std::cout << "Blad ladowania tla: " << sciezkaGwiazdMalych << "\n";
+    }
+
+    const char* sciezkaGwiazdDuzych = "media/Backgroud/Stars-Big_1_1_PC.png";
+    if (!std::ifstream(sciezkaGwiazdDuzych).good()) sciezkaGwiazdDuzych = "../../media/Backgroud/Stars-Big_1_1_PC.png";
+
+    if (teksturaGwiazdDuzych.loadFromFile(sciezkaGwiazdDuzych)) {
+        teksturaGwiazdDuzych.setRepeated(true);
+        gwiazdyDuze.setTexture(teksturaGwiazdDuzych);
+        gwiazdyDuze.setColor(sf::Color(255, 255, 255, 210));
+    }
+    else {
+        std::cout << "Blad ladowania tla: " << sciezkaGwiazdDuzych << "\n";
+    }
 }
 
 void Gra::inicjalizujMenu() {
@@ -261,6 +300,7 @@ void Gra::rysuj() {
 
     if (obecnyStan == StanGry::ROZGRYWKA) {
         okno.setView(kamera);
+        rysujTlo();
         for (auto& obiekt : obiektyWGrze) {
             obiekt->rysuj(okno);
         }
@@ -278,6 +318,7 @@ void Gra::rysuj() {
     }
     else if (obecnyStan == StanGry::GAME_OVER) {
         okno.setView(kamera);
+        rysujTlo();
         for (auto& obiekt : obiektyWGrze) {
             obiekt->rysuj(okno);
         }
@@ -298,6 +339,36 @@ void Gra::rysuj() {
     }
 
     okno.display();
+}
+
+void Gra::rysujTlo() {
+    sf::Vector2f rozmiarWidoku = kamera.getSize();
+    float lewyBrzeg = kamera.getCenter().x - rozmiarWidoku.x / 2.f;
+    float gornyBrzeg = kamera.getCenter().y - rozmiarWidoku.y / 2.f;
+
+    if (teksturaTla.getSize().y > 0) {
+        int przesuniecie = static_cast<int>(-kamera.getCenter().y * 0.12f) % static_cast<int>(teksturaTla.getSize().y);
+        if (przesuniecie < 0) przesuniecie += static_cast<int>(teksturaTla.getSize().y);
+        tlo.setPosition(lewyBrzeg, gornyBrzeg);
+        tlo.setTextureRect(sf::IntRect(0, przesuniecie, static_cast<int>(rozmiarWidoku.x), static_cast<int>(rozmiarWidoku.y)));
+        okno.draw(tlo);
+    }
+
+    if (teksturaGwiazdMalych.getSize().y > 0) {
+        int przesuniecie = static_cast<int>(-kamera.getCenter().y * 0.35f) % static_cast<int>(teksturaGwiazdMalych.getSize().y);
+        if (przesuniecie < 0) przesuniecie += static_cast<int>(teksturaGwiazdMalych.getSize().y);
+        gwiazdyMale.setPosition(lewyBrzeg, gornyBrzeg);
+        gwiazdyMale.setTextureRect(sf::IntRect(0, przesuniecie, static_cast<int>(rozmiarWidoku.x), static_cast<int>(rozmiarWidoku.y)));
+        okno.draw(gwiazdyMale);
+    }
+
+    if (teksturaGwiazdDuzych.getSize().y > 0) {
+        int przesuniecie = static_cast<int>(-kamera.getCenter().y * 0.55f) % static_cast<int>(teksturaGwiazdDuzych.getSize().y);
+        if (przesuniecie < 0) przesuniecie += static_cast<int>(teksturaGwiazdDuzych.getSize().y);
+        gwiazdyDuze.setPosition(lewyBrzeg, gornyBrzeg);
+        gwiazdyDuze.setTextureRect(sf::IntRect(0, przesuniecie, static_cast<int>(rozmiarWidoku.x), static_cast<int>(rozmiarWidoku.y)));
+        okno.draw(gwiazdyDuze);
+    }
 }
 
 void Gra::generujPlatformy() {
