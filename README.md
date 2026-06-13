@@ -1,2 +1,8 @@
-# neon_ascent
-gierka na projekt na zaliczenie, bardzo dobra, nieprofesjonalna ALE  jest włożone serce, pot i załamania nerwowe
+# neon\_ascend
+
+
+
+W/Spacja - boost
+
+A/D - lewo/prawo
+

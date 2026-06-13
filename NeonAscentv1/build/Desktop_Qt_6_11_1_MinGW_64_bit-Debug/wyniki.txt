@@ -55,3 +55,10 @@ Wynik gracza: 135
 Wynik gracza: 0
 Wynik gracza: 83
 Wynik gracza: 115
+Wynik gracza: 30
+Wynik gracza: 39
+Wynik gracza: 30
+Wynik gracza: 31
+Wynik gracza: 85
+Wynik gracza: 117
+Wynik gracza: 26
