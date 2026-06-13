@@ -34,8 +34,8 @@ Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent") {
 }
 
 void Gra::inicjalizujTlo() {
-    const char* sciezkaTla = "media/Background/Nebula Blue.png";
-    if (!std::ifstream(sciezkaTla).good()) sciezkaTla = "../../media/Background/Nebula Blue.png";
+    const char* sciezkaTla = "media/Background/tlo.png";
+    if (!std::ifstream(sciezkaTla).good()) sciezkaTla = "../../media/Background/tlo.png";
 
     if (teksturaTla.loadFromFile(sciezkaTla)) {
         teksturaTla.setRepeated(true);
@@ -502,28 +502,36 @@ void Gra::zapiszWynik() {
         plik.close();
     }
 }
-
+//v2
 void Gra::zaladujWynikiZPliku() {
     std::ifstream plik("wyniki.txt");
     std::string linia;
-    std::vector<std::string> wszystkieWyniki;
+    std::vector<int> liczboweWyniki;
 
     if (plik.is_open()) {
         while (std::getline(plik, linia)) {
-            wszystkieWyniki.push_back(linia);
+            size_t pozycjaDwukropka = linia.find(": ");
+            if (pozycjaDwukropka != std::string::npos) {
+                try {
+                    int wynik = std::stoi(linia.substr(pozycjaDwukropka + 2));
+                    liczboweWyniki.push_back(wynik);
+                } catch (...) {
+                }
+            }
         }
         plik.close();
     }
 
     std::string tekstDoWyswietlenia = "";
-    int iloscWynikow = wszystkieWyniki.size();
 
-    if (iloscWynikow == 0) {
+    if (liczboweWyniki.empty()) {
         tekstDoWyswietlenia = "Brak rozegranych gier!";
     } else {
-        int start = std::max(0, iloscWynikow - 5);
-        for (int i = start; i < iloscWynikow; i++) {
-            tekstDoWyswietlenia += wszystkieWyniki[i] + "\n\n";
+        std::sort(liczboweWyniki.begin(), liczboweWyniki.end(), std::greater<int>());
+        int iloscDoWyswietlenia = std::min(5, static_cast<int>(liczboweWyniki.size()));
+
+        for (int i = 0; i < iloscDoWyswietlenia; i++) {
+            tekstDoWyswietlenia += std::to_string(i + 1) + ". Wynik: " + std::to_string(liczboweWyniki[i]) + "\n\n";
         }
     }
 

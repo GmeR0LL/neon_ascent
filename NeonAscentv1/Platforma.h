@@ -2,11 +2,18 @@
 #define PLATFORMA_H
 
 #include "Obiekt.h"
+#include <iostream>
 
 enum class TypPlatformy { ZWYKLA, KRUCHA, MIGAJACA};
 class Platforma : public Obiekt {
 private:
-    sf::RectangleShape ksztalt;
+    //podmiana kształt na Sprite
+    sf::Sprite sprite;
+    static sf::Texture teksturaZwykla;
+    static sf::Texture teksturaKrucha;
+    static sf::Texture teksturaMigajaca;
+    static bool zaladowanoTekstury; //spawdzająca czy załadowano
+
     bool czyDotknieta;
 
     TypPlatformy typ;

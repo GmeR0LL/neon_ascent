@@ -51,3 +51,7 @@ Wynik gracza: 36
 Wynik gracza: 66
 Wynik gracza: 5
 Wynik gracza: 2
+Wynik gracza: 135
+Wynik gracza: 0
+Wynik gracza: 83
+Wynik gracza: 115

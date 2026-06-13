@@ -1,28 +1,54 @@
 #include "Platforma.h"
+#include <fstream>
+#include <iostream>
 
+
+//static
+sf::Texture Platforma::teksturaZwykla;
+sf::Texture Platforma::teksturaKrucha;
+sf::Texture Platforma::teksturaMigajaca;
+bool Platforma::zaladowanoTekstury = false;
 
 //platforma dodalem boola
 Platforma::Platforma(float x, float y, float szerokosc, TypPlatformy typPlatformy) : Obiekt(x, y), czyDotknieta(false), typ(typPlatformy), zegarMigotania(0.f), widoczna(true), zniszczona(false) {
-    ksztalt.setSize(sf::Vector2f(szerokosc, 20.f));
+    if (!zaladowanoTekstury) {
+        std::string s1 = "media/platforma/plat1.png";
+        if (!std::ifstream(s1).good()) s1 = "../../" + s1;
+        if (!teksturaZwykla.loadFromFile(s1)) std::cout << "Blad: " << s1 << "\n";
+
+        std::string s2 = "media/platforma/plat2.png";
+        if (!std::ifstream(s2).good()) s2 = "../../" + s2;
+        if (!teksturaMigajaca.loadFromFile(s2)) std::cout << "Blad: " << s2 << "\n";
+
+        std::string s3 = "media/platforma/plat3.png";
+        if (!std::ifstream(s3).good()) s3 = "../../" + s3;
+        if (!teksturaKrucha.loadFromFile(s3)) std::cout << "Blad: " << s3 << "\n";
+
+        zaladowanoTekstury = true;
+    }
+
     // Kolory platform
     if(typ == TypPlatformy::ZWYKLA)
     {
-        ksztalt.setFillColor(sf::Color(255,0,255)); // Różowa
+        sprite.setTexture(teksturaZwykla); // Różowa
     }
     else if(typ == TypPlatformy::KRUCHA)
     {
-        ksztalt.setFillColor(sf::Color(255, 100, 0)); //Pomaranczowa(zanika)
+        sprite.setTexture(teksturaKrucha); //Pomaranczowa(zanika)
     }
     else if (typ == TypPlatformy::MIGAJACA)
     {
-        ksztalt.setFillColor(sf::Color(0, 255, 255)); // Błękitna (miga)
+        sprite.setTexture(teksturaMigajaca); // Błękitna (miga)
     }
 
-    ksztalt.setPosition(pozycja);
+    float teksturaSzer = static_cast<float>(sprite.getTexture()->getSize().x);
+    if (teksturaSzer > 0) {
+        float skalaX = szerokosc / teksturaSzer;
+        sprite.setScale(skalaX, 1.0f);
+    }
+
+    sprite.setPosition(pozycja);
 }
-
-
-
 
 void Platforma::aktualizuj(float deltaTime) {
     if (typ == TypPlatformy::MIGAJACA && !zniszczona) {
@@ -38,14 +64,13 @@ void Platforma::aktualizuj(float deltaTime) {
 void Platforma::rysuj(sf::RenderWindow& okno) {
     //Rysujemy, gdy jest widoczna i nie jest zniszczona
     if (widoczna && !zniszczona) {
-        okno.draw(ksztalt);
+        okno.draw(sprite);
     }
 }
 
 sf::FloatRect Platforma::pobierzGranice() const {
-    return ksztalt.getGlobalBounds();
+    return sprite.getGlobalBounds();
 }
-
 
 //dotknieta platforma
 void Platforma::oznaczJakoDotknieta() {
@@ -55,10 +80,9 @@ void Platforma::oznaczJakoDotknieta() {
         zniszczona = true;
     }
     else if (typ == TypPlatformy::ZWYKLA) {
-        ksztalt.setFillColor(sf::Color(100, 0, 100)); // Zwykła tylko ciemnieje
+        sprite.setColor(sf::Color(100, 100, 100)); // Zwykła tylko ciemnieje
     }
-
- }
+}
 
 bool Platforma::czyAktywna() const {
     return widoczna && !zniszczona;
