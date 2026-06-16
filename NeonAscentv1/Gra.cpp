@@ -13,7 +13,7 @@ Gra::Gra() : okno(sf::VideoMode(800, 600), "Neon Ascent") {
     obecnyStan = StanGry::MENU;
 
     //zaladowanie czcionki
-    if (!czcionka.loadFromFile("media/czcionka.ttf")) {
+    if (!czcionka.loadFromFile("/../../media/czcionka.ttf")) {
         std::cout << "Blad ladowania czcionki. media/czcionka.ttf\n";
     }
 

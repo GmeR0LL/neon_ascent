@@ -62,3 +62,5 @@ Wynik gracza: 31
 Wynik gracza: 85
 Wynik gracza: 117
 Wynik gracza: 26
+Wynik gracza: 23
+Wynik gracza: 45
